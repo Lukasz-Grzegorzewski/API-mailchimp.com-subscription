@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const request = require('request');
 const { urlencoded } = require('body-parser');
 const https = require('https');
+const config = require('./keys.js')
 
 const app = express();
 app.use(express.static('public'), bodyParser.urlencoded({extended: true}));
@@ -31,10 +32,10 @@ app.post('/', function(req, res){
     }
     const jsonData = JSON.stringify(data);
 
-    const url = 'https://us18.api.mailchimp.com/3.0/lists/67783713e2';
+    const url = `https://us18.api.mailchimp.com/3.0/lists/${config.options.audience}`;
     const options = {
         method: 'POST',
-        auth: 'lukas1:41918a51a819e14456b61822ac5503ce-us18'
+        auth: config.options.key
     };
     const request = https.request(url, options, function(response) {
 
@@ -45,7 +46,6 @@ app.post('/', function(req, res){
         }
         
         response.on('data', function (data) {
-            //console.log(JSON.parse(data));    
         })
     })
 
@@ -64,5 +64,3 @@ app.listen(process.env.PORT || 3000, function(){
 
 
 
-// MailChimp API key :  41918a51a819e14456b61822ac5503ce-us18
-// Audience ID :    67783713e2
